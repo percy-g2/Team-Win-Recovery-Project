@@ -1231,13 +1231,10 @@ bool MultiROM::compressRamdisk(const char* src, const char* dst, int cmpr)
 			sprintf(cmd, "cd \"%s\" && find . | cpio -o -H newc | lz4 stdin \"%s\"", src, dst);
 			system(cmd);
 			return true;
-		// FIXME: busybox can't compress with lzma
 		case CMPR_LZMA:
-			gui_print("Recovery can't compress ramdisk using LZMA!\n");
-			return false;
-//			sprintf(cmd, "cd \"%s\" && find . | cpio -o -H newc | lzma > \"%s\"", src, dst);
-//			system(cmd);
-//			return true;
+			sprintf(cmd, "cd \"%s\" && find . | cpio -o -H newc | lzma > \"%s\"", src, dst);
+			system(cmd);
+			return true;
 		default:
 			gui_print("Invalid compression type: %d", cmpr);
 			return false;

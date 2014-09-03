@@ -52,6 +52,10 @@
 		<variable name="row2_y" value="332" />
 		<variable name="row3_y" value="524" />
 		<variable name="row4_y" value="716" />
+		<variable name="col1_center_x" value="120" />
+		<variable name="col2_center_x" value="276" />
+		<variable name="row1_text2_y" value="155" />
+		<variable name="row2_text2_y" value="275" />
 		<variable name="row_queue_y" value="625" />
 		<variable name="row1_header_y" value="110" />
 		<variable name="row1_text_y" value="140" />
@@ -187,6 +191,30 @@
 		<variable name="slidervalue_padding" value="15" />
 		<variable name="slidervalue_sliderw" value="8" />
 		<variable name="slidervalue_sliderh" value="45" />
+		<variable name="mrom_inject_txt_x" value="450" />
+		<variable name="mrom_inject_txt_y" value="515" />
+		<variable name="mrom_wipe_col1_x" value="95" />
+		<variable name="mrom_wipe_col2_x" value="231" />
+		<variable name="mrom_wipe_col3_x" value="365" />
+		<variable name="mrom_boot_delay_sec_x" value="305" />
+		<variable name="mrom_boot_delay_add_x" value="350" />
+		<variable name="mrom_boot_rom_h" value="400" />
+		<variable name="mrom_ubuntu_desktop_x" value="150" />
+		<variable name="mrom_ubuntu_touch_x" value="350" />
+		<variable name="mrom_install_loc_h" value="260" />
+		<variable name="mrom_install_refresh_y" value="670" />
+		<variable name="mrom_img1_text_y" value="300" />
+		<variable name="mrom_img2_text_y" value="365" />
+		<variable name="mrom_img3_text_y" value="430" />
+		<variable name="mrom_img4_text_y" value="570" />
+		<variable name="mrom_img5_text_y" value="660" />
+		<variable name="mrom_img1_btn_y" value="265" />
+		<variable name="mrom_img2_btn_y" value="355" />
+		<variable name="mrom_img3_btn_y" value="445" />
+		<variable name="mrom_img4_btn_y" value="535" />
+		<variable name="mrom_img5_btn_y" value="625" />
+		<variable name="mrom_rom_loc_list_h" value="430" />
+		<variable name="mrom_swap_list_h" value="260" />
 	</variables>
 
 	<mousecursor>
@@ -207,7 +235,7 @@
 			<object type="text" color="%text_color%">
 				<font resource="font" />
 				<placement x="100" y="10" />
-				<text>Team Win Recovery Project  v%tw_version%</text>
+				<text>MultiROM TWRP %tw_mrom_rec_version% (v%tw_version%)</text>
 			</object>
 
 			<object type="text" color="%text_color%">
@@ -232,6 +260,13 @@
 					<condition var1="tw_battery" op="<" var2="101" />
 				</conditions>
 				<text>Battery: %tw_battery%</text>
+			</object>
+
+			<object type="text" color="%text_fail_color%">
+				<font resource="font" />
+				<placement x="180" y="60" />
+				<condition var1="multirom_rom_name_title" var2="1" />
+				<text>Using ROM: %tw_multirom_rom_name%</text>
 			</object>
 
 			<object type="button">
@@ -598,6 +633,14 @@
 				<font resource="font" color="%text_color%" />
 				<text>Zip file signature verification.</text>
 				<data variable="tw_signed_zip_verify" />
+				<image checked="checkbox_true" unchecked="checkbox_false" />
+			</object>
+
+			<object type="checkbox">
+				<placement x="%col1_x%" y="%row9_text_y%" />
+				<font resource="font" color="%text_color%" />
+				<text>Inject MultiROM after installation.</text>
+				<data variable="tw_auto_inject_mrom" />
 				<image checked="checkbox_true" unchecked="checkbox_false" />
 			</object>
 
@@ -1039,8 +1082,7 @@
 			<object type="action">
 				<touch key="home" />
 				<actions>
-					<action function="set">tw_clear_destination=main2</action>
-					<action function="page">clear_vars</action>
+					<action function="multirom_exit_backup">main</action>
 				</actions>
 			</object>
 
@@ -1794,12 +1836,12 @@
 
 			<object type="action">
 				<touch key="home" />
-				<action function="page">main</action>
+				<action function="multirom_exit_backup">main</action>
 			</object>
 
 			<object type="action">
 				<touch key="back" />
-				<action function="page">main</action>
+				<action function="multirom_exit_backup">multirom_manage</action>
 			</object>
 
 			<object type="template" name="footer" />
@@ -1875,7 +1917,7 @@
 				<touch key="home" />
 				<actions>
 					<action function="set">tw_backup_name=(Auto Generate)</action>
-					<action function="page">main</action>
+					<action function="multirom_exit_backup">main</action>
 				</actions>
 			</object>
 
@@ -1943,7 +1985,7 @@
 
 			<object type="action">
 				<touch key="home" />
-				<action function="page">main</action>
+				<action function="multirom_exit_backup">main</action>
 			</object>
 
 			<object type="action">
@@ -2002,7 +2044,7 @@
 
 			<object type="action">
 				<touch key="home" />
-				<action function="page">main</action>
+				<action function="multirom_exit_backup">main</action>
 			</object>
 
 			<object type="action">
@@ -2398,7 +2440,7 @@
 
 			<object type="action">
 				<touch key="home" />
-				<action function="page">main</action>
+				<action function="multirom_exit_backup">main</action>
 			</object>
 
 			<object type="action">
@@ -3240,6 +3282,14 @@
 				</actions>
 			</object>
 
+			<object type="button">
+				<highlight color="%highlight_color%" />
+				<placement x="%col2_x%" y="%row4_y%" />
+				<font resource="font" color="%button_text_color%" />
+				<text>MultiROM</text>
+				<image resource="main_button" />
+				<action function="multirom"/>
+			</object>
 			<object type="action">
 				<touch key="home" />
 				<action function="page">main</action>
@@ -4226,6 +4276,13 @@
 				<image checked="checkbox_true" unchecked="checkbox_false" />
 			</object>
 
+			<object type="checkbox">
+				<placement x="%col1_x%" y="%row4_text_y%" />
+				<font resource="font" color="%text_color%" />
+				<text>Inject MultiROM after installation.</text>
+				<data variable="tw_auto_inject_mrom" />
+				<image checked="checkbox_true" unchecked="checkbox_false" />
+			</object>
 			<object type="slider">
 				<placement x="%slider_x%" y="%slider_y%" />
 				<resource base="slider" used="slider-used" touch="slider-touch" />
@@ -4314,5 +4371,8 @@
 				<text>Swipe to Install</text>
 			</object>
 		</page>
+
+#include "../../mrom_portrait.xml"
+
 	</pages>
 </recovery>
